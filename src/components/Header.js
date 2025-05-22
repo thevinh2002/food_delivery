@@ -5,24 +5,36 @@ import {
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import CartModal from './CartModal';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const { cartItems } = useCart();
-  const userName = 'Nguyen Van A';
-  const userInitials = userName.split(' ').map(n => n[0]).join('');
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
+
+  const handleLogout = () => {
+    logout();
+    handleMenuClose();
+    navigate('/login');
+  };
+
+  const userName = user?.email || 'Guest';
+  const userInitials = user?.email ? user.email[0].toUpperCase() : '?';
 
   return (
     <>
       <AppBar position="static" color="primary">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="h6" component="div">Food Delivery</Typography>
+          <Typography variant="h6" component={RouterLink} to="/" sx={{ textDecoration: 'none', color: 'inherit' }}>
+            Food Delivery
+          </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Button color="inherit" component={RouterLink} to="/">Home</Button>
@@ -30,27 +42,36 @@ export default function Header() {
             <Button color="inherit" component={RouterLink} to="/about">About</Button>
             <Button color="inherit" component={RouterLink} to="/contact">Contact</Button>
 
-            <IconButton color="inherit" aria-label="cart" onClick={() => setCartOpen(true)}>
+            <IconButton color="inherit" onClick={() => setCartOpen(true)}>
               <Badge badgeContent={cartItems.length} color="error">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
 
-            <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
-              <Avatar>{userInitials}</Avatar>
-            </IconButton>
+            {user ? (
+              <>
+                <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
+                  <Avatar>{userInitials}</Avatar>
+                </IconButton>
 
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-              <MenuItem disabled>{userName}</MenuItem>
-              <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-              <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-            </Menu>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <MenuItem disabled>{userName}</MenuItem>
+                  <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Button color="inherit" component={RouterLink} to="/login">Login</Button>
+                <Button color="inherit" component={RouterLink} to="/register">Register</Button>
+              </>
+            )}
           </Box>
         </Toolbar>
       </AppBar>

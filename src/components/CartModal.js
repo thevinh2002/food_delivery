@@ -10,6 +10,8 @@ import {
   ListItemText,
   IconButton,
   Typography,
+  Box,
+  Divider,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -32,50 +34,134 @@ export default function CartModal({ open, onClose }) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Your Cart</DialogTitle>
-      <DialogContent dividers>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="sm" 
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          minHeight: '50vh'
+        }
+      }}
+    >
+      <DialogTitle sx={{ 
+        bgcolor: 'primary.main', 
+        color: 'white',
+        py: 2
+      }}>
+        Your Cart
+      </DialogTitle>
+      
+      <DialogContent dividers sx={{ p: 0 }}>
         {cartItems.length === 0 ? (
-          <Typography variant="body1">Your cart is empty.</Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            height: '200px'
+          }}>
+            <Typography variant="h6" color="text.secondary">
+              Your cart is empty
+            </Typography>
+          </Box>
         ) : (
-          <List>
+          <List sx={{ width: '100%' }}>
             {cartItems.map(({ id, name, price, quantity }) => (
-              <ListItem
-                key={id}
-                secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={() => removeFromCart(id)}>
+              <React.Fragment key={id}>
+                <ListItem
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    py: 2,
+                    px: 3,
+                    '&:hover': {
+                      bgcolor: 'action.hover'
+                    }
+                  }}
+                >
+                  <ListItemText
+                    primary={
+                      <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+                        {name}
+                      </Typography>
+                    }
+                    secondary={`$${price.toFixed(2)} each`}
+                    sx={{ flex: 1 }}
+                  />
+
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center',
+                    bgcolor: 'action.selected',
+                    borderRadius: 1,
+                    px: 1
+                  }}>
+                    <IconButton 
+                      onClick={() => handleDecrease(id, quantity)} 
+                      size="small" 
+                      color="primary"
+                    >
+                      <RemoveIcon fontSize="small" />
+                    </IconButton>
+                    <Typography sx={{ mx: 2, minWidth: '20px', textAlign: 'center' }}>
+                      {quantity}
+                    </Typography>
+                    <IconButton 
+                      onClick={() => handleIncrease(id, quantity)} 
+                      size="small" 
+                      color="primary"
+                    >
+                      <AddIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+
+                  <IconButton 
+                    edge="end" 
+                    aria-label="delete" 
+                    onClick={() => removeFromCart(id)}
+                    sx={{ ml: 2 }}
+                    color="error"
+                  >
                     <DeleteIcon />
                   </IconButton>
-                }
-                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-              >
-                <ListItemText
-                  primary={name}
-                  secondary={`$${price} each`}
-                  sx={{ flex: 1 }}
-                />
-
-                {/* Control số lượng */}
-                <IconButton onClick={() => handleDecrease(id, quantity)} size="small" color="primary">
-                  <RemoveIcon />
-                </IconButton>
-                <Typography sx={{ mx: 1 }}>{quantity}</Typography>
-                <IconButton onClick={() => handleIncrease(id, quantity)} size="small" color="primary">
-                  <AddIcon />
-                </IconButton>
-              </ListItem>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
             ))}
           </List>
         )}
       </DialogContent>
-      <DialogActions>
-        <Typography sx={{ flexGrow: 1, fontWeight: 'bold', ml: 2 }}>
+
+      <DialogActions sx={{ 
+        px: 3, 
+        py: 2,
+        bgcolor: 'grey.50'
+      }}>
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            flexGrow: 1,
+            color: 'primary.main'
+          }}
+        >
           Total: ${totalPrice.toFixed(2)}
         </Typography>
-        <Button onClick={clearCart} color="error" disabled={cartItems.length === 0}>
+        <Button 
+          onClick={clearCart} 
+          color="error" 
+          disabled={cartItems.length === 0}
+          sx={{ mr: 1 }}
+        >
           Clear Cart
         </Button>
-        <Button onClick={onClose} variant="contained" color="primary">
+        <Button 
+          onClick={onClose} 
+          variant="contained" 
+          color="primary"
+          sx={{ px: 3 }}
+        >
           Close
         </Button>
       </DialogActions>

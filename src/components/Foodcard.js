@@ -16,6 +16,7 @@ import { useCart } from '../context/CartContext'; // Đường dẫn tùy dự �
 
 export default function Foodcard({ id, name, description, price, img }) {
   const [open, setOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { addToCart } = useCart();
 
   const handleOpen = () => setOpen(true);
@@ -26,10 +27,25 @@ export default function Foodcard({ id, name, description, price, img }) {
     setOpen(false);
   };
 
+  const handleImageError = () => {
+    console.error(`Failed to load image for ${name}`);
+    setImageError(true);
+  };
+
   return (
     <>
       <Card sx={{ maxWidth: 280 }}>
-        <CardMedia component="img" height="160" image={img} alt={name} />
+        <CardMedia 
+          component="img" 
+          height="160" 
+          image={img} 
+          alt={name}
+          onError={handleImageError}
+          sx={{
+            objectFit: 'cover',
+            backgroundColor: imageError ? '#f5f5f5' : 'transparent'
+          }}
+        />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">{name}</Typography>
           <Typography variant="body2" color="text.secondary" sx={{ minHeight: 40 }}>{description}</Typography>
