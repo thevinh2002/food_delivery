@@ -18,9 +18,11 @@ import {
   Alert,
 } from '@mui/material';
 import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Pay() {
   const { cartItems } = useCart();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -48,10 +50,21 @@ export default function Pay() {
     setSubmitted(true);
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   if (cartItems.length === 0) {
     return (
       <Box sx={{ p: 4, textAlign: 'center' }}>
         <Typography variant="h5">Your cart is empty</Typography>
+        <Button
+          variant="outlined"
+          onClick={handleGoBack}
+          sx={{ mt: 2 }}
+        >
+          Go Back
+        </Button>
       </Box>
     );
   }
@@ -62,18 +75,33 @@ export default function Pay() {
         <Alert severity="success" sx={{ mb: 2 }}>
           Your order has been placed successfully!
         </Alert>
-        <Typography variant="body1">
+        <Typography variant="body1" sx={{ mb: 2 }}>
           Thank you for your order. We will contact you shortly to confirm the delivery.
         </Typography>
+        <Button
+          variant="outlined"
+          onClick={handleGoBack}
+        >
+          Go Back
+        </Button>
       </Box>
     );
   }
 
   return (
     <Box sx={{ p: 4, maxWidth: 1200, mx: 'auto' }}>
-      <Typography variant="h4" sx={{ mb: 4 }}>
-        Checkout
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+        <Button
+          variant="outlined"
+          onClick={handleGoBack}
+          sx={{ mr: 2 }}
+        >
+          Go Back
+        </Button>
+        <Typography variant="h4">
+          Checkout
+        </Typography>
+      </Box>
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>

@@ -34,17 +34,38 @@ export default function Login() {
         }
 
         setLoading(true);
-        setTimeout(() => {
-            const success = login(email, password);
+        
+        try {
+            // Lấy danh sách users từ localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // Tìm user trong danh sách
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            setTimeout(() => {
+                if (user) {
+                    // Đăng nhập thành công
+                    const loginSuccess = login(email, password); // Gọi hàm login từ AuthContext
+                    if (loginSuccess) {
+                        setSuccessMsg('Đăng nhập thành công!');
+                        // Lưu thông tin user hiện tại vào localStorage và đánh dấu đã đăng nhập
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            ...user,
+                            isLoggedIn: true
+                        }));
+                        navigate('/');
+                    } else {
+                        setErrorMsg('Có lỗi xảy ra khi đăng nhập.');
+                    }
+                } else {
+                    setErrorMsg('Email hoặc mật khẩu không đúng.');
+                }
+                setLoading(false);
+            }, 1000);
+        } catch (error) {
+            setErrorMsg('Có lỗi xảy ra khi đăng nhập.');
             setLoading(false);
-
-            if (success) {
-                setSuccessMsg('Đăng nhập thành công!');
-                navigate('/'); // chuyển về Home
-            } else {
-                setErrorMsg('Email hoặc mật khẩu không đúng.');
-            }
-        }, 1000);
+        }
     };
 
     return (
