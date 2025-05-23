@@ -25,6 +25,11 @@ export default function Header() {
     navigate('/login');
   };
 
+  const handleProfile = () => {
+    handleMenuClose();
+    navigate('/user');
+  };
+
   const userName = user?.email || 'Guest';
   const userInitials = user?.email ? user.email[0].toUpperCase() : '?';
 
@@ -62,7 +67,7 @@ export default function Header() {
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
                   <MenuItem disabled>{userName}</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>

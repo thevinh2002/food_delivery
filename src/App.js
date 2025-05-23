@@ -7,9 +7,10 @@ import Menu from './pages/Menu';
 import Register from './pages/Register';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import User from './pages/User';
+import Pay from './pages/Pay';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './router/PrivateRoute';
-
 function App() {
   return (
     <AuthProvider>
@@ -19,6 +20,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/user" element={<User />} />
 
           <Route
             path="/"
@@ -34,6 +36,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Menu />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/pay"
+            element={
+              <PrivateRoute>
+                <Pay />
               </PrivateRoute>
             }
           />

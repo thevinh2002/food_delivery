@@ -17,9 +17,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartModal({ open, onClose }) {
   const { cartItems, removeFromCart, clearCart, updateQuantity } = useCart();
+  const navigate = useNavigate();
 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -31,6 +33,11 @@ export default function CartModal({ open, onClose }) {
     if (currentQty > 1) {
       updateQuantity(id, currentQty - 1);
     }
+  };
+
+  const handleCheckout = () => {
+    onClose();
+    navigate('/pay');
   };
 
   return (
@@ -137,32 +144,48 @@ export default function CartModal({ open, onClose }) {
       <DialogActions sx={{ 
         px: 3, 
         py: 2,
-        bgcolor: 'grey.50'
+        bgcolor: 'grey.50',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        gap: 2
       }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            flexGrow: 1,
-            color: 'primary.main'
-          }}
-        >
-          Total: ${totalPrice.toFixed(2)}
-        </Typography>
-        <Button 
-          onClick={clearCart} 
-          color="error" 
-          disabled={cartItems.length === 0}
-          sx={{ mr: 1 }}
-        >
-          Clear Cart
-        </Button>
-        <Button 
-          onClick={onClose} 
-          variant="contained" 
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              color: 'primary.main'
+            }}
+          >
+            Total: ${totalPrice.toFixed(2)}
+          </Typography>
+          <Box>
+            <Button 
+              onClick={clearCart} 
+              color="error" 
+              disabled={cartItems.length === 0}
+              sx={{ mr: 1 }}
+            >
+              Clear Cart
+            </Button>
+            <Button 
+              onClick={onClose} 
+              variant="outlined" 
+              color="primary"
+            >
+              Close
+            </Button>
+          </Box>
+        </Box>
+        
+        <Button
+          onClick={handleCheckout}
+          variant="contained"
           color="primary"
-          sx={{ px: 3 }}
+          size="large"
+          disabled={cartItems.length === 0}
+          fullWidth
         >
-          Close
+          Proceed to Checkout
         </Button>
       </DialogActions>
     </Dialog>
