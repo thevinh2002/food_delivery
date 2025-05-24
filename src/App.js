@@ -9,6 +9,10 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import User from './pages/User';
 import Pay from './pages/Pay';
+import PurchaseHistory from './pages/PurchaseHistory';
+import Product from './pages/Product';
+
+
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './router/PrivateRoute';
 function App() {
@@ -21,7 +25,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/user" element={<User />} />
-
+          <Route path="/product/:id" element={<Product />} />
           <Route
             path="/"
             element={
@@ -36,6 +40,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Menu />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/purchase-history"
+            element={
+              <PrivateRoute>
+                <PurchaseHistory />
               </PrivateRoute>
             }
           />

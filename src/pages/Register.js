@@ -39,23 +39,6 @@ export default function Register() {
 
     setLoading(true);
     setTimeout(() => {
-      // Get existing users from localStorage or initialize empty array
-      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-      
-      // Check if email already exists
-      const userExists = existingUsers.some(user => user.email === email);
-      
-      if (userExists) {
-        setLoading(false);
-        setErrorMsg('Tài khoản đã tồn tại.');
-        return;
-      }
-
-      // Add new user
-      const newUser = { email, password };
-      existingUsers.push(newUser);
-      localStorage.setItem('users', JSON.stringify(existingUsers));
-
       const success = register(email, password);
       setLoading(false);
 

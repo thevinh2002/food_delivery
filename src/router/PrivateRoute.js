@@ -11,8 +11,8 @@ export default function PrivateRoute({ children }) {
         return <Navigate to="/" replace />;
     }
 
-    // Nếu chưa đăng nhập và đang truy cập trang user, chuyển hướng về login
-    if (!user && location.pathname === '/user') {
+    // Nếu chưa đăng nhập và đang truy cập trang user, pay hoặc purchase-history, chuyển hướng về login
+    if (!user && (location.pathname === '/user' || location.pathname === '/pay' || location.pathname === '/purchase-history')) {
         return <Navigate to="/login" replace />;
     }
 

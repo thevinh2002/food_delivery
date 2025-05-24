@@ -29,6 +29,10 @@ export default function Header() {
     handleMenuClose();
     navigate('/user');
   };
+  const handlePurchaseHistory =() =>{
+    handleMenuClose();
+    navigate('/purchase-history');
+  }
 
   const userName = user?.email || 'Guest';
   const userInitials = user?.email ? user.email[0].toUpperCase() : '?';
@@ -68,6 +72,7 @@ export default function Header() {
                 >
                   <MenuItem disabled>{userName}</MenuItem>
                   <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                  <MenuItem onClick={handlePurchaseHistory}>purchase history</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>

@@ -84,22 +84,27 @@ const foods = [
     sold: 160,
   },
 ];
-export default function Foodlist({ limit }) {
-  const topFoods = [...foods]
-    .sort((a, b) => b.sold - a.sold)
-    .slice(0, limit !== undefined ? limit : foods.length);
+
+export { foods };
+
+export default function Foodlist({ page = 1, itemsPerPage = 6 }) {
+  // Calculate start and end index for the current page
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  
+  // Get foods for current page
+  const currentFoods = foods.slice(startIndex, endIndex);
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: 3,
         padding: 3,
-        flexWrap: 'wrap',
       }}
     >
-      {topFoods.map(food => (
+      {currentFoods.map(food => (
         <FoodCard key={food.id} {...food} />
       ))}
     </Box>
